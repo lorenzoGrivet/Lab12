@@ -29,15 +29,26 @@ class Controller:
 
 
     def handle_graph(self, e):
+        self._view.txt_result.controls.clear()
         self._model.creaGrafo(self._view.ddyear.value,self._view.ddcountry.value)
+        self._view.txt_result.controls.append(ft.Text(f"Numero nodi: {self._model.getNumNodes()}"))
+        self._view.txt_result.controls.append(ft.Text(f"Numero archi: {self._model.getNumEdges()}"))
+        self._view.update_page()
 
         pass
 
 
 
     def handle_volume(self, e):
+        dic=self._model.calcolaVolumi()
+        for a in dic:
+            self._view.txt_result.controls.append(ft.Text(f"{a[0]} ---> {a[1]}"))
+        self._view.update_page()
         pass
 
 
     def handle_path(self, e):
+        max=self._view.txtN.value
+        maxInt=int(max)
+        self._model.calcolaPercorso(maxInt)
         pass

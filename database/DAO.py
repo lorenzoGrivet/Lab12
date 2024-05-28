@@ -47,16 +47,46 @@ class DAO():
         cnx = DBConnect.get_connection()
         cursor = cnx.cursor(dictionary=True)
 
-        query = """select gr.Retailer_code, gr.Retailer_name, gr.`Type` , gr.Country
-                from go_sales.go_retailers gr , go_sales.go_daily_sales gds 
-                where gr.Retailer_code =gds.Retailer_code and year (gds.`Date`)=%s and gr.Country =%s"""
+        query = """select *
+                        from go_sales.go_retailers gr
+                        where gr.Country =%s"""
 
-        cursor.execute(query,(anno,nazione,))
+        cursor.execute(query, (nazione,))
 
         risultato = []
 
         for a in cursor:
             risultato.append(Retailer(**a))
+
+        cursor.close()
+        cnx.close()
+        return risultato
+
+    @staticmethod
+    def getArchi(anno,codice,nazione):
+        cnx = DBConnect.get_connection()
+        cursor = cnx.cursor(dictionary=False)
+
+        query = """select gds.Retailer_code ,count(distinct(gds.Product_number)) as conteggio
+                from go_sales.go_daily_sales gds , go_sales.go_daily_sales gds2, go_sales.go_retailers gr
+                where year(gds2.`Date`) = %s
+                    and year(gds.`Date`) = %s
+                    and gds2.Retailer_code = %s
+                    and gds.Retailer_code!= %s 
+                    and gds2.Product_number = gds.Product_number 
+                    and gr.Retailer_code  = gds.Retailer_code
+                    and gr.Country = %s
+                group by gds.Retailer_code"""
+
+        cursor.execute(query, (anno,anno,codice,codice,nazione,))
+
+        risultato = []
+
+        for a in cursor:
+            risultato.append(a)
+            # print(a)
+
+
 
         cursor.close()
         cnx.close()
