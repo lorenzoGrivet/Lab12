@@ -91,3 +91,4 @@ class DAO():
         cursor.close()
         cnx.close()
         return risultato
+    

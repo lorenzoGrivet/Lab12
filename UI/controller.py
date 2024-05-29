@@ -42,13 +42,13 @@ class Controller:
     def handle_volume(self, e):
         dic=self._model.calcolaVolumi()
         for a in dic:
-            self._view.txt_result.controls.append(ft.Text(f"{a[0]} ---> {a[1]}"))
+            self._view.txtOut2.controls.append(ft.Text(f"{a[0]} ---> {a[1]}"))
         self._view.update_page()
         pass
 
 
     def handle_path(self, e):
         max=self._view.txtN.value
-        maxInt=int(max)
+        maxInt=int(max)+1
         self._model.calcolaPercorso(maxInt)
         pass
